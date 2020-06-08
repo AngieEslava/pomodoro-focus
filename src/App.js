@@ -1,24 +1,51 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {useState} from 'react';
+import Break from './components/Break';
+import Pomodoro from './components/Pomodoro';
+import Time from './components/Time';
 
 function App() {
+  const[breakLength, setBreakLength ] = useState(300);
+  const[pomodoroLength, setPomodoroLength ] = useState(1500);
+
+  const decrementOneMinutePomodoro = () => {
+    const newPomodoro = pomodoroLength-60;
+    if(newPomodoro < 0) {
+        setPomodoroLength(0);
+    }else{
+        setPomodoroLength(newPomodoro);
+    };
+  }; 
+  const incrementOneMinutePomodoro = () => {
+      setPomodoroLength(pomodoroLength + 60);
+  };
+
+  const decrementOneMinuteBreak = () => {
+    const newBreak = breakLength-60;
+    if(newBreak < 0) {
+        setBreakLength(0);
+    }else{
+        setBreakLength(newBreak);
+    };
+  }; 
+  const incrementOneMinuteBreak = () => {
+      setBreakLength(breakLength + 60);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className = "App">
+      <Break 
+        breakLength={breakLength}
+        decrementOneMinuteBreak={decrementOneMinuteBreak}
+        incrementOneMinuteBreak={incrementOneMinuteBreak}
+      />
+      <Time breakLength={breakLength} pomodoroLength={pomodoroLength} />
+      <Pomodoro 
+        pomodoroLength={pomodoroLength}
+        decrementOneMinutePomodoro={decrementOneMinutePomodoro}
+        incrementOneMinutePomodoro={incrementOneMinutePomodoro}
+      />
     </div>
   );
 }
