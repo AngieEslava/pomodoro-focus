@@ -1,53 +1,116 @@
-import React from 'react';
-import './App.css';
-import {useState} from 'react';
-import Break from './components/Break.jsx';
-import Pomodoro from './components/Pomodoro.jsx';
-import Timer from './components/Timer.jsx';
+import React, { useState, useRef } from "react";
+import "./App.css";
+import Break from "./components/Break";
+import Pomodoro from "./components/Pomodoro";
+import TimeLeft from "./components/TimeLeft";
+import { useEffect } from "react";
 
 function App() {
-  const[breakLength, setBreakLength ] = useState(300);
-  const[pomodoroLength, setPomodoroLength ] = useState(1500);
+  const audioElement = useRef(null);
+  const [currentPomodoroType, setCurrentPomodoroType] = useState("Pomodoro");
+  const [intervalId, setIntervalId] = useState(null);
+  const [pomodoroLength, setPomodoroLength] = useState(60 * 25);
+  const [breakLength, setBreakLength] = useState(300);
+  const [timeLeft, setTimeLeft] = useState(pomodoroLength);
 
-  const decrementOneMinutePomodoro = () => {
-    const newPomodoro = pomodoroLength-60;
-    if(newPomodoro < 0) {
-        setPomodoroLength(0);
-    }else{
-        setPomodoroLength(newPomodoro);
-    };
-  }; 
-  const incrementOneMinutePomodoro = () => {
-      setPomodoroLength(pomodoroLength + 60);
+  useEffect(() => {
+    setTimeLeft(pomodoroLength);
+  }, [pomodoroLength]);
+
+  const decrementBreakLengthByOneMinute = () => {
+    const newBreakLength = breakLength - 60;
+
+    if (newBreakLength < 0) {
+      setBreakLength(0);
+    } else {
+      setBreakLength(newBreakLength);
+    }
   };
 
-  const decrementOneMinuteBreak = () => {
-    const newBreak = breakLength-60;
-    if(newBreak < 0) {
-        setBreakLength(0);
-    }else{
-        setBreakLength(newBreak);
-    };
-  }; 
-  const incrementOneMinuteBreak = () => {
-      setBreakLength(breakLength + 60);
+  const incrementBreakLengthByOneMinute = () => {
+    setBreakLength(breakLength + 60);
+  };
+  const decrementPomodoroLengthByOneMinute = () => {
+    const newPomodoroLength = pomodoroLength - 60;
+
+    if (newPomodoroLength < 0) {
+      setPomodoroLength(0);
+    } else {
+      setPomodoroLength(newPomodoroLength);
+    }
   };
 
+  const incrementPomodoroLengthByOneMinute = () => {
+    setPomodoroLength(pomodoroLength + 60);
+  };
+  const isStarted = intervalId !== null;
+  const handleStartStopClick = () => {
+    if (isStarted) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    } else {
+      const newIntervalId = setInterval(() => {
+        setTimeLeft((prevTimeLeft) => {
+          const newTimeLeft = prevTimeLeft - 1;
+          if (newTimeLeft >= 0) {
+            return prevTimeLeft - 1;
+          }
+          audioElement.current.play();
+          if (currentPomodoroType === "Pomodoro") {
+            setCurrentPomodoroType("Break");
+            setTimeLeft(breakLength);
+          } else if (currentPomodoroType === "Break") {
+            setCurrentPomodoroType("Pomodoro");
+            setTimeLeft(pomodoroLength);
+          }
+        });
+      }, 100);
+      setIntervalId(newIntervalId);
+    }
+  };
+  const handleReserButtonClick = () => {
+    audioElement.current.load();
+    clearInterval(intervalId);
+    setIntervalId(null);
+    setCurrentPomodoroType("Pomodoro");
+    setPomodoroLength(60 * 25);
+    setBreakLength(60 * 5);
+    setTimeLeft(60 * 25);
+  };
   return (
-    <div className = "App">
-      <Break 
+    <div className="App">
+      <Break
         breakLength={breakLength}
-        decrementOneMinuteBreak={decrementOneMinuteBreak}
-        incrementOneMinuteBreak={incrementOneMinuteBreak}
+        decrementBreakLengthByOneMinute={decrementBreakLengthByOneMinute}
+        incrementBreakLengthByOneMinute={incrementBreakLengthByOneMinute}
       />
-      <Timer breakLength={breakLength} pomodoroLength={pomodoroLength} />
-      <Pomodoro 
+      <br />
+
+      <TimeLeft
+        breakLength={breakLength}
+        handleStartStopClick={handleStartStopClick}
+        timerLabel={currentPomodoroType}
         pomodoroLength={pomodoroLength}
-        decrementOneMinutePomodoro={decrementOneMinutePomodoro}
-        incrementOneMinutePomodoro={incrementOneMinutePomodoro}
+        starStopButtonLabel={isStarted ? "Stop" : "Start"}
+        timeLeft={timeLeft}
       />
+      <br />
+      <Pomodoro
+        pomodoroLength={pomodoroLength}
+        decrementPomodoroLengthByOneMinute={decrementPomodoroLengthByOneMinute}
+        incrementPomodoroLengthByOneMinute={incrementPomodoroLengthByOneMinute}
+      />
+      <button id="reset" onClick={handleReserButtonClick}>
+        {" "}
+        reset{" "}
+      </button>
+      <audio id="beep" ref={audioElement}>
+        <source
+          src="https://onlineclock.net/audio/audio/options/default.mp3"
+          type="audio/mpeg"
+        />
+      </audio>
     </div>
   );
 }
-
 export default App;

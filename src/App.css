@@ -4,9 +4,10 @@
 
 body{
   font-family: 'Merriweather', serif;
+  background-color: #ffd32a;
 }
 .App-header {
-  background-color: #ff4757;
+  background-color: #3c40c6;
   min-height: 20vh;
   display: flex;
   flex-direction: column;
@@ -30,7 +31,7 @@ button {
   cursor: pointer;
 }
 button:hover {
-  background-color: #ff4757;
+  background-color: #05c46b;
   color: white;
 }
 
