@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
 import {useState} from 'react';
-import Break from './components/Break';
-import Pomodoro from './components/Pomodoro';
-import Time from './components/Time';
+import Break from './components/Break.jsx';
+import Pomodoro from './components/Pomodoro.jsx';
+import Timer from './components/Timer.jsx';
 
 function App() {
   const[breakLength, setBreakLength ] = useState(300);
@@ -40,7 +40,7 @@ function App() {
         decrementOneMinuteBreak={decrementOneMinuteBreak}
         incrementOneMinuteBreak={incrementOneMinuteBreak}
       />
-      <Time breakLength={breakLength} pomodoroLength={pomodoroLength} />
+      <Timer breakLength={breakLength} pomodoroLength={pomodoroLength} />
       <Pomodoro 
         pomodoroLength={pomodoroLength}
         decrementOneMinutePomodoro={decrementOneMinutePomodoro}
