@@ -6,6 +6,7 @@ import React from "react";
 momentDurationFormatSetup(moment);
 
 const TimeLeft = ({
+  handleReserButtonClick,
   handleStartStopClick,
   starStopButtonLabel,
   timeLeft,
@@ -14,14 +15,20 @@ const TimeLeft = ({
   const formattedTimeLeft = moment
     .duration(timeLeft, "s")
     .format("mm:ss", { trim: false });
+    
   return (
-    <div class="clock">
-      <h1 id="timer-tittle" className="App-header">Cronómetro</h1>
-      <p id="timer-label">{timerLabel}</p>
+    <div className="item2">
+      <h1 id="timer-tittle" >Cronómetro</h1>
+      <p id="timer-label" className="App-header">{timerLabel}</p>
       <p id="time-left">{formattedTimeLeft}</p>
       <button id="start_stop" onClick={handleStartStopClick}>
         {starStopButtonLabel}
       </button>
+      <button id="reset" onClick={handleReserButtonClick}>
+        {" "}
+        Borrar{" "}
+      </button>
+      
     </div>
   );
 };

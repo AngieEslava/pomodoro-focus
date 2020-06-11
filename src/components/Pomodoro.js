@@ -8,8 +8,8 @@ const Pomodoro = ({
 }) => {
   const pomodoroLengthInMinutes = moment.duration(pomodoroLength, "s").minutes();
   return (
-    <div>
-      <h1 id="pomodoro-label" className="App-header">Pomodoro</h1>
+    <div className="item1">
+      <h1 id="pomodoro-label" >Pomodoro</h1>
       <p id="pomodoro-length">{pomodoroLengthInMinutes}</p>
       <button
         id="pomodoro-decrement"

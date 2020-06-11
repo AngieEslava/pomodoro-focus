@@ -84,26 +84,20 @@ function App() {
         decrementBreakLengthByOneMinute={decrementBreakLengthByOneMinute}
         incrementBreakLengthByOneMinute={incrementBreakLengthByOneMinute}
       />
-      <br />
-
       <TimeLeft
         breakLength={breakLength}
         handleStartStopClick={handleStartStopClick}
+        handleReserButtonClick={handleReserButtonClick}
         timerLabel={currentPomodoroType}
         pomodoroLength={pomodoroLength}
-        starStopButtonLabel={isStarted ? "Stop" : "Start"}
+        starStopButtonLabel={isStarted ? "Parar" : "Iniciar"}
         timeLeft={timeLeft}
       />
-      <br />
       <Pomodoro
         pomodoroLength={pomodoroLength}
         decrementPomodoroLengthByOneMinute={decrementPomodoroLengthByOneMinute}
         incrementPomodoroLengthByOneMinute={incrementPomodoroLengthByOneMinute}
       />
-      <button id="reset" onClick={handleReserButtonClick}>
-        {" "}
-        reset{" "}
-      </button>
       <audio id="beep" ref={audioElement}>
         <source
           src="https://onlineclock.net/audio/audio/options/default.mp3"
